@@ -10,17 +10,63 @@
 
 <body>
   <header>
-    <h2>Rate My Instructor TEST</h2>
+    <h2>Rate My Instructor</h2>
+    
+    <button class="open-button" onclick="openForm()">Login</button>
+    <div class="form-popup" id="myForm">
+
+      <form action="/action_page.php" class="form-container">
+        <h4>Login</h4>
+    
+        <label for="email"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
+    
+        <!-- <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required> -->
+    
+        <button type="submit" class="btn">Login</button>
+        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+      </form>
+    </div>
+    <br>
+
+
+    <script>
+      function openForm() {
+        document.getElementById("myForm").style.display = "block";
+      }
+      
+      function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+      </script>
   </header>
   <nav>
     <ul id="instructor-list">
       <li>Instructor 1</li>
       <li>Instructor 2</li>
       <li>Instructor 3</li>
+
     </ul>
+    <div> 
+      <form id="instructor-form" data-id="User ID HERE" autocomplete="off">
+        <h4> Make a New Instructor </h4> 
+        <label for="name"> New Instructor Name: </label>
+        <input type="text" name="name"  /><br>
+        
+        <label for="years_teaching"> New Instructor Years: </label>
+        <input type="text" name="years_teaching" /><br>
+
+        <label for="bio"> Bio: </label><br>
+        <input type="text" name="bio" /><br>
+
+        <input type="submit" value="Update" />
+      </form>
+    </div> 
   </nav>
   <main>
-    <img src="" alt="placeholder" style="max-width: 500px;" />
+    <img src="https://i.imgur.com/I514AHz.png" alt="placeholder" style="max-width: 500px;" />
+    
     <h1>Instructor Name</h1>
     <div class="info">
       <h3>School</h3>
@@ -30,6 +76,13 @@
         <!-- COMMENTS GO HERE -->
       </ul>
     </div>
+
+    <form id="comment-form" data-id="insert Instructor ID HERE" autocomplete="off">
+      <h4> Add a Comment </h4> 
+      <label for="name"> Comment Here: </label>
+      <input type="text" name="content" id=1 />
+      <input type="submit" value="Update" />
+    </form>
     <hr />
     
   </main>
