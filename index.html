@@ -31,8 +31,8 @@
       </form>
     </div>
     <div class="form-popup2" id="div-login-form2">
-
-
+      <p id="username-container">Welcome USERNAMEHERE</p>
+      <button onclick="closeForm2()">Log Out</button>
     </div>
     <br>
 
@@ -46,9 +46,11 @@
         document.getElementById("div-login-form").style.display = "none";
       }
 
-      // function restoreForm() {
-      //   document.getElementById("div-login-form").style.display = "none";
-      // }
+      function closeForm2() {
+        document.getElementById("div-login-form").style.display = "block";
+        document.getElementById("div-login-form2").style.display = "none";
+        
+      }
 
       function openInstructorForm() {
         document.querySelector("#div-instructor-form").style.display = "block";
@@ -68,22 +70,26 @@
 
     </ul>
    
-    <button class="new-instructor-button" onclick="openInstructorForm()">Make A New Instructor</button>
+    <button class="new-instructor-button" onclick="openInstructorForm()">Add A New Instructor</button>
     
     <div class="instructor-form-popup" id="div-instructor-form"> 
       <form id="instructor-form" data-id="User ID HERE" autocomplete="off">
-        <h4> Make a New Instructor </h4> 
-        <label for="name"> New Instructor Name: </label><br>
+        <h4>Add a New Instructor </h4> 
+        <label for="name">New Instructor Name: </label><br>
         <input type="text" name="name"  /><br>
-        
-        <label for="years_teaching"> New Instructor Years: </label><br>
+        <br>
+        <label for="years_teaching">New Instructor Years: </label><br>
         <input type="text" name="years_teaching" /><br>
-
-        <label for="bio"> Bio: </label><br>
+        <br>
+        <label for="bio">Bio: </label><br>
         <input type="text" name="bio" /><br>
-
-        <input type="submit" value="Update" />
-        <button type="button" class="btn cancel" onclick="closeInstructorForm()">Close</button>
+        <br>
+        <label for="image">Image Link: </label><br>
+        <input type="text" name="image" /><br>
+        <br>
+        <input class="button" type="submit" value="Add Your Instructor" /><br>
+        <br>
+        <button type="button" class="button" onclick="closeInstructorForm()">Close</button>
       </form>
     </div> 
   </nav>
@@ -104,7 +110,7 @@
       <h4> Add a Comment for this Instructor </h4> 
       <label for="name"></label>
       <input type="text" name="content" id=1 />
-      <input type="submit" value="Comment" />
+      <input class="button" type="submit" value="Comment" />
     </form>
     <hr />
     

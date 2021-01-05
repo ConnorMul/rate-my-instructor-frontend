@@ -1,5 +1,5 @@
 
-// DOM ELEMENTS
+//************* DOM ELEMENTS *************//
 const instructorName = document.querySelector("h2")
 const instructorSchool = document.querySelector("h3")
 const instructorBio = document.querySelector("#bio")
@@ -11,16 +11,18 @@ const instructorForm = document.querySelector(`#instructor-form`)
 const navbar = document.querySelector("#navbar")
 const loginForm = document.querySelector(`#login-form`)
 const divLoginForm = document.querySelector(`#div-login-form`)
+const divLoginForm2 = document.querySelector(`#div-login-form2`) //This is for the popup after logging in
 const instructorImg = document.querySelector("img")
+
 
 instructorList.innerHTML = ""
 
-let globalLoginedUser = null; //not being used
-let isUserUnique = false; 
-let targetID = null; //not being used 
+let globalLoginedUserID = null; 
+let viewedInstructorID = 21 // change this when reseed.
 
 
-// FETCH FUNCTIONS
+//*************  FETCH FUNCTIONS *************//
+
 function fetchOneInstructor(id) {
     client.get(`/instructors/${id}`)
     .then(instructorObj => renderInstructor(instructorObj))
@@ -33,7 +35,8 @@ function fetchAllInstructors() {
 }
 
 
-// RENDER FUNCTIONS
+//************ RENDER FUNCTIONS ***************//
+
 let renderInstructor = (instructorObj) => {
     instructorImg.src = instructorObj.image
     instructorName.textContent = instructorObj.name
@@ -57,8 +60,15 @@ let renderInstructor = (instructorObj) => {
         commentLi.textContent = comment.content
         agreeButton.textContent = `${comment.agree} agree with this`
             
+        if (comment.user_id === globalLoginedUserID) {
+            commentLi.textContent += "This is your comment (TEST)"
+        }
+        //console.log(comment.user_id)
+
         commentLi.append(agreeButton)
         instructorComments.append(commentLi)
+
+
     })
 }
 
@@ -72,22 +82,18 @@ function renderInstructorNavBar(instructorObj) {
 }
 
 
-
-// EVENT LISTENERS
+//************ EVENT LISTENERS ************//
 
 instructorList.addEventListener("click", evt => {
     if (evt.target.matches("li")) {
-        //console.log(evt.target.dataset.id)
         let id = evt.target.dataset.id
-
         instructorComments.innerHTML = "";
         fetchOneInstructor(id);
-
+        viewedInstructorID = id;
     }
 })
 
 instructorLikes.addEventListener("click", evt => {
-
     const id = evt.target.dataset.id
     const likesStr = instructorLikes.innerHTML.slice(0, -5)
     let likesNum = parseInt(likesStr);
@@ -101,7 +107,7 @@ instructorLikes.addEventListener("click", evt => {
     .then(instructorObj => instructorLikes.textContent = `${instructorObj.likes} Likes`)
 })
 
-instructorComments.addEventListener("click", evt => {
+instructorComments.addEventListener("click", evt => { //Adds the like to a comment
     if(evt.target.matches("button")) {
         const id = evt.target.dataset.id
         const agreeButton = evt.target
@@ -118,7 +124,7 @@ instructorComments.addEventListener("click", evt => {
     }
 })
 
-commentForm.addEventListener("submit", event => {
+commentForm.addEventListener("submit", event => { //New Comment 
     event.preventDefault();
 
     let newComment = event.target.content.value 
@@ -126,21 +132,24 @@ commentForm.addEventListener("submit", event => {
     dataObj = { 
         content: newComment, 
         agree: 1, 
-        user_id: 11, 
+        user_id: globalLoginedUserID, 
         instructor_id: targetID
     }
 
+    if (globalLoginedUserID !== null) {
      client.post('/comments', dataObj)
      .then(commentObj => fetchOneInstructor(targetID))
+    }
 
 })
 
-instructorForm.addEventListener("submit", evt => {
+instructorForm.addEventListener("submit", evt => { //Addes a new Instructor
     evt.preventDefault()
 
     let newInstructorName = evt.target.name.value
     let newInstructorYearsTeaching = evt.target.years_teaching.value
     let newInstructorBio = evt.target.bio.value
+    let newInstructorImage = evt.target.bio.image
 
 
     let dataObj = {
@@ -148,7 +157,8 @@ instructorForm.addEventListener("submit", evt => {
         years_teaching: newInstructorYearsTeaching,
         bio: newInstructorBio,
         school: "Flatiron",
-        likes: 1
+        likes: 1,
+        image: newInstructorImage
     }
 
     client.post('/instructors', dataObj)
@@ -157,95 +167,49 @@ instructorForm.addEventListener("submit", evt => {
     document.getElementById("instructor-form").reset();
 })
 
-
-
-loginForm.addEventListener("submit", evt => { //Logins in the wrong wayy
+loginForm.addEventListener("submit", evt => {  //The Login function 
     evt.preventDefault()
-    isUserUnique = false;
-
     let loginUsername = evt.target.username.value
-    //document.cookie = `username=${username}`
-    //console.log(document.cookie)
+    fetchOneInstructor(viewedInstructorID); //render's if comments is made by the user. 
 
+    divLoginForm2.style.display = "block"; //Style changes, shows the login box and hides the welcome user box
+    divLoginForm.style.display = "none";
+
+    userDisplay = document.querySelector("#username-container")
+    userDisplay.textContent = `Welcome ${loginUsername}`
 
     client.get("/users")
-    // //.then(userArray => console.log(userArray.find( userObj => userObj.username === "loginUsername" )))
     .then(userArray => checkUser(userArray, loginUsername))
 
-    if (isUserUnique === true){
-            console.log("making Post request")
-            dataObj = { username: loginUsername }
-            // client.post("/users", dataObj)
-            // .then(response => console.log(response.id))
-    }
-
-
-    divLoginForm.innerHTML = ''
-
-    let newContent = document.createElement("p")
-    newContent.dataset.id = 1
-    newContent.id = "username-container"
-    newContent.textContent = `Welcome ${loginUsername}`
     
-    let newButton = document.createElement("button")
-    newButton.textContent = `Log Out`
-
-    divLoginForm.append(newContent)
-    divLoginForm.append(newButton)
-
-    
-    logoutButton = document.querySelector('#div-login-form > button')
-    //console.log(logoutButton)
+    logoutButton = document.querySelector('#div-login-form2 > button')
 
     logoutButton.addEventListener("click", event =>{
         evt.preventDefault()
-        //console.log(event.target)
-
-        globalLoginedUser = null; 
-        divLoginForm.innerHTML = ''
-
-    //     divLoginForm.innerHTML = `
-    //     <form  class="form-container" id="login-form">
-    //     <h4>Login</h4>
-    
-    //     <label for="email"><b>Username</b></label>
-    //     <input type="text" placeholder="Enter Username" name="username" required>
-    
-    //     <!-- <label for="psw"><b>Password</b></label>
-    //     <input type="password" placeholder="Enter Password" name="psw" required> -->
-    
-    //     <button type="submit" class="btn">Login</button>
-    //     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-    //   </form>
-    //     `
+        globalLoginedUserID = null;                     //resets global var and renders page again so it will not show 
+        fetchOneInstructor(viewedInstructorID);         //which comments the user owened
     } )
+    
 
 })
 
-
-
-
 function checkUser (userArray, loginUsername) {
-
     //let index = userArray.find( userObj => userObj.username == loginUsername)
-    //find not working 
-
+    //find method not working 
     let checked = false; 
 
-    userArray.forEach( userObj => {if (userObj.username === loginUsername){
+    userArray.forEach( userObj => {   //This loop checks the login name to see if it needs to be added to the backend
+        if (userObj.username === loginUsername){
+        globalLoginedUserID = userObj.id; 
         checked = true; 
-        isUserUnique = true;
         }
     })
 
-    //console.log(loginUsername, checked)
-
-    // if (checked == false) {
-    //     //console.log("test")
-    //     dataObj = {username: loginUsername}
-    //     client.post("/users", dataObj)
-        
-    // }
+    if (checked == false) {             //Adds the new login name to the back end, then changes the global logined user
+        dataObj = {username: loginUsername}
+        client.post("/users", dataObj)  
+        .then(response => globalLoginedUserID = response.id)
+    }
 
 }
 

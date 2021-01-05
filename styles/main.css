@@ -1,4 +1,5 @@
 body {
+ 
     margin: 0;
     padding: 0;
     display: grid;
@@ -9,25 +10,33 @@ body {
     grid-template-rows: 80px 1fr;
     row-gap: 10px;
     column-gap: 15px;
+    
+
+    /* background-image: linear-gradient(to bottom right,fuchsia, yellow); */
   }
   
   header {
     grid-area: header;
     border: 2px solid red;
+    border-radius: 5px;
   }
   
   main {
     grid-area: main;
     border: 2px solid blue;
+    border-radius: 5px;
   }
   
   main img {
     padding: 10px;
+    display: flex;  
+    /* flex-wrap: wrap; */
   }
   
   nav {
     grid-area: nav;
     border: 2px solid green;
+    border-radius: 5px;
   }
 
   ul {
@@ -35,6 +44,15 @@ body {
   }
 
   .form-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    background-color: white;
+  }
+  .form-popup2 {
     display: none;
     position: fixed;
     top: 0;
@@ -64,21 +82,59 @@ body {
   .instructor-form-popup {
     display: none;
     position: fixed;
-    left: 5px;
+    left: 10px;
     /* right: 15px; */
     border: 3px solid #f1f1f1;
-    z-index: 9;
+    /* z-index: 9; */
     background-color: white;
   }
 
   .info {
-
+    text-align: center;
   }
 
   h1 {
-    align: left;
+    text-align: left;
+    padding-left: 10px;
+    color: rgb(69, 226, 231);
   }
 
   h2 {
-    align: center;
+    text-align: center;
   }
+
+  img {
+    margin: 0 auto;
+    width: 20em;
+    height: 20em;
+  }
+
+  button, .button {
+    font-size: 15px;
+    background: none;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    box-shadow: rgba(30, 15, 36, 0.657) 2px 2px 2px 2px;
+  }
+
+  ul {
+    margin-left: 0;
+    padding-left: 30px;
+  }
+
+  li {
+    list-style: none;
+    border: solid 1px white;
+    padding: 5px;
+    margin: 5px;
+}
+
+li:hover {
+  box-shadow: rgba(32, 2, 56, 0.924) 1px 1px 4px;
+}
+
+#comment-form {
+  text-align: center;
+}
