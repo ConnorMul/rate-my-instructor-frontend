@@ -1,6 +1,6 @@
 
 // DOM ELEMENTS
-const instructorName = document.querySelector("h1")
+const instructorName = document.querySelector("h2")
 const instructorSchool = document.querySelector("h3")
 const instructorBio = document.querySelector("#bio")
 const instructorLikes = document.querySelector("#likes")
@@ -8,27 +8,34 @@ const instructorComments = document.querySelector("#comments")
 const instructorList = document.querySelector("#instructor-list")
 const commentForm = document.querySelector(`#comment-form`)
 const instructorForm = document.querySelector(`#instructor-form`)
+const navbar = document.querySelector("#navbar")
+const loginForm = document.querySelector(`#login-form`)
+const divLoginForm = document.querySelector(`#div-login-form`)
+const instructorImg = document.querySelector("img")
+
 instructorList.innerHTML = ""
 
-let targetID = null;
+let globalLoginedUser = null; //not being used
+let isUserUnique = false; 
+let targetID = null; //not being used 
+
 
 // FETCH FUNCTIONS
 function fetchOneInstructor(id) {
-    fetch(`http://localhost:3000/instructors/${id}`)
-    .then(resp => resp.json())
+    client.get(`/instructors/${id}`)
     .then(instructorObj => renderInstructor(instructorObj))
 }
 
 function fetchAllInstructors() {
     instructorList.innerHTML = ''
-    fetch("http://localhost:3000/instructors")
-    .then(resp => resp.json())
+    client.get("/instructors")
     .then(instructorArray => instructorArray.forEach(renderInstructorNavBar))
 }
 
 
 // RENDER FUNCTIONS
-function renderInstructor(instructorObj) {
+let renderInstructor = (instructorObj) => {
+    instructorImg.src = instructorObj.image
     instructorName.textContent = instructorObj.name
     instructorSchool.textContent = instructorObj.school
     instructorBio.textContent = instructorObj.bio
@@ -42,6 +49,7 @@ function renderInstructor(instructorObj) {
     instructorObj.comments.forEach((comment) => {
         let commentLi = document.createElement("li")
         commentLi.dataset.id = comment.id
+
 
         let agreeButton = document.createElement("button")
         agreeButton.dataset.id = comment.id
@@ -63,16 +71,10 @@ function renderInstructorNavBar(instructorObj) {
     instructorList.append(instructorLi)
 }
 
-function instructorArray(instructorObj){
-
-    
-
-
-}
-
 
 
 // EVENT LISTENERS
+
 instructorList.addEventListener("click", evt => {
     if (evt.target.matches("li")) {
         //console.log(evt.target.dataset.id)
@@ -90,20 +92,12 @@ instructorLikes.addEventListener("click", evt => {
     const likesStr = instructorLikes.innerHTML.slice(0, -5)
     let likesNum = parseInt(likesStr);
     likesNum++
-    
-    const configObj = {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-        },
-        body: JSON.stringify({
-           likes: likesNum
-        })
-    }
 
-    fetch(`http://localhost:3000/instructors/${id}`, configObj)
-    .then(resp => resp.json())
+    dataObj = {
+        likes: likesNum
+    }
+    
+    client.patch(`/instructors/${id}`, dataObj)
     .then(instructorObj => instructorLikes.textContent = `${instructorObj.likes} Likes`)
 })
 
@@ -114,21 +108,12 @@ instructorComments.addEventListener("click", evt => {
         const agreeStr = agreeButton.innerHTML.slice(0, -16)
         agreeNum = parseInt(agreeStr)
         agreeNum++
-       
-        
-        const configObj = {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
-            },
-            body: JSON.stringify({
-               agree: agreeNum
-            })
+
+        dataObj = {
+            agree: agreeNum
         }
 
-        fetch(`http://localhost:3000/comments/${id}`, configObj)
-        .then(resp => resp.json())
+        client.patch(`/comments/${id}`, dataObj)
         .then(commentObj => agreeButton.textContent = `${commentObj.agree} agree with this`)
     }
 })
@@ -138,28 +123,15 @@ commentForm.addEventListener("submit", event => {
 
     let newComment = event.target.content.value 
 
-    console.log(newComment)
-
-    data = { 
+    dataObj = { 
         content: newComment, 
         agree: 1, 
-        user_id: 1, 
+        user_id: 11, 
         instructor_id: targetID
     }
 
-    let configObj = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-        },
-        body: JSON.stringify(data)
-    }
-
-    fetch(`http://localhost:3000/comments/`, configObj)
-    .then(response => response.json())
-    //.then(commentObj => console.log(commentObj))
-    .then(commentObj => fetchOneInstructor(targetID))
+     client.post('/comments', dataObj)
+     .then(commentObj => fetchOneInstructor(targetID))
 
 })
 
@@ -171,7 +143,7 @@ instructorForm.addEventListener("submit", evt => {
     let newInstructorBio = evt.target.bio.value
 
 
-    let data = {
+    let dataObj = {
         name: newInstructorName,
         years_teaching: newInstructorYearsTeaching,
         bio: newInstructorBio,
@@ -179,21 +151,104 @@ instructorForm.addEventListener("submit", evt => {
         likes: 1
     }
 
-    let configObj = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-        },
-        body: JSON.stringify(data)
-    }
-
-    fetch(`http://localhost:3000/instructors/`, configObj)
-    .then(resp => resp.json())
-    //.then(instructorObj => console.log(instructorObj))
+    client.post('/instructors', dataObj)
     .then(instructorObj => fetchAllInstructors())
+
+    document.getElementById("instructor-form").reset();
 })
 
+
+
+loginForm.addEventListener("submit", evt => { //Logins in the wrong wayy
+    evt.preventDefault()
+    isUserUnique = false;
+
+    let loginUsername = evt.target.username.value
+    //document.cookie = `username=${username}`
+    //console.log(document.cookie)
+
+
+    client.get("/users")
+    // //.then(userArray => console.log(userArray.find( userObj => userObj.username === "loginUsername" )))
+    .then(userArray => checkUser(userArray, loginUsername))
+
+    if (isUserUnique === true){
+            console.log("making Post request")
+            dataObj = { username: loginUsername }
+            // client.post("/users", dataObj)
+            // .then(response => console.log(response.id))
+    }
+
+
+    divLoginForm.innerHTML = ''
+
+    let newContent = document.createElement("p")
+    newContent.dataset.id = 1
+    newContent.id = "username-container"
+    newContent.textContent = `Welcome ${loginUsername}`
+    
+    let newButton = document.createElement("button")
+    newButton.textContent = `Log Out`
+
+    divLoginForm.append(newContent)
+    divLoginForm.append(newButton)
+
+    
+    logoutButton = document.querySelector('#div-login-form > button')
+    //console.log(logoutButton)
+
+    logoutButton.addEventListener("click", event =>{
+        evt.preventDefault()
+        //console.log(event.target)
+
+        globalLoginedUser = null; 
+        divLoginForm.innerHTML = ''
+
+    //     divLoginForm.innerHTML = `
+    //     <form  class="form-container" id="login-form">
+    //     <h4>Login</h4>
+    
+    //     <label for="email"><b>Username</b></label>
+    //     <input type="text" placeholder="Enter Username" name="username" required>
+    
+    //     <!-- <label for="psw"><b>Password</b></label>
+    //     <input type="password" placeholder="Enter Password" name="psw" required> -->
+    
+    //     <button type="submit" class="btn">Login</button>
+    //     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    //   </form>
+    //     `
+    } )
+
+})
+
+
+
+
+function checkUser (userArray, loginUsername) {
+
+    //let index = userArray.find( userObj => userObj.username == loginUsername)
+    //find not working 
+
+    let checked = false; 
+
+    userArray.forEach( userObj => {if (userObj.username === loginUsername){
+        checked = true; 
+        isUserUnique = true;
+        }
+    })
+
+    //console.log(loginUsername, checked)
+
+    // if (checked == false) {
+    //     //console.log("test")
+    //     dataObj = {username: loginUsername}
+    //     client.post("/users", dataObj)
+        
+    // }
+
+}
+
 // INITIAL RENDER
-fetchOneInstructor(1)
+fetchOneInstructor(21)
 fetchAllInstructors()

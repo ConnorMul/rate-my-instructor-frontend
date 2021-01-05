@@ -30,6 +30,10 @@ body {
     border: 2px solid green;
   }
 
+  ul {
+
+  }
+
   .form-popup {
     display: none;
     position: fixed;
@@ -48,8 +52,33 @@ body {
     cursor: pointer;
     opacity: 0.8;
     position: fixed;
-    top: 23px;
+    top: 20px;
     right: 28px;
     width: 280px;
   }
   
+  #username-container{
+    padding: 0px 120px 0px 120px
+  }
+  
+  .instructor-form-popup {
+    display: none;
+    position: fixed;
+    left: 5px;
+    /* right: 15px; */
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    background-color: white;
+  }
+
+  .info {
+
+  }
+
+  h1 {
+    align: left;
+  }
+
+  h2 {
+    align: center;
+  }
