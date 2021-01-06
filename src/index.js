@@ -72,9 +72,7 @@ let renderInstructor = (instructorObj) => {
            
             deleteButton.addEventListener("click", () => {
                 client.delete(`/comments/${deleteButton.dataset.id}`)
-                .then(commentObj => () => {
-                    fetchOneInstructor(viewedInstructorID)
-                })
+                .then(commentObj => commentLi.remove())
             })
             // commentLi.textContent += "This is your comment (TEST)"
         }
