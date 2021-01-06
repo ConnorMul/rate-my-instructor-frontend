@@ -154,7 +154,7 @@ commentForm.addEventListener("submit", event => { //New Comment
      client.post('/comments', dataObj)
      .then(commentObj => fetchOneInstructor(targetID))
     }
-
+    event.target.reset()
 })
 
 instructorForm.addEventListener("submit", evt => { //Addes a new Instructor

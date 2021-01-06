@@ -37,9 +37,9 @@ body {
     grid-area: nav;
     border: 2px solid green;
     border-radius: 5px;
-    
-
   }
+
+  
 
   ul {
 
@@ -145,3 +145,9 @@ li:hover {
 .hidden-button {
   display: none;
 }
+
+/* input[type=text] {
+  padding:10px;
+  border:0;
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+} */
