@@ -18,7 +18,7 @@ const instructorImg = document.querySelector("img")
 instructorList.innerHTML = ""
 
 let globalLoginedUserID = null; 
-let viewedInstructorID = 21 // change this when reseed.
+let viewedInstructorID = 6 // change this when reseed.
 
 
 //*************  FETCH FUNCTIONS *************//
@@ -227,5 +227,5 @@ function checkUser (userArray, loginUsername) {
 }
 
 // INITIAL RENDER
-fetchOneInstructor(21)
+fetchOneInstructor(6)
 fetchAllInstructors()
