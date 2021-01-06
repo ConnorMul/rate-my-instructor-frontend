@@ -111,6 +111,7 @@ body {
 
   button, .button {
     font-size: 15px;
+    display: content !important;
     background: none;
     border: none;
     border-radius: 2rem;
@@ -137,4 +138,8 @@ li:hover {
 
 #comment-form {
   text-align: center;
+}
+
+.hidden-button {
+  display: none;
 }

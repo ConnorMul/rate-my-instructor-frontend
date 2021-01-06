@@ -35,6 +35,7 @@ function fetchAllInstructors() {
 }
 
 
+
 //************ RENDER FUNCTIONS ***************//
 
 let renderInstructor = (instructorObj) => {
@@ -56,21 +57,36 @@ let renderInstructor = (instructorObj) => {
 
         let agreeButton = document.createElement("button")
         agreeButton.dataset.id = comment.id
+        let deleteButton = document.createElement("button")
+        deleteButton.classList.add("hidden-button")
 
         commentLi.textContent = comment.content
         agreeButton.textContent = `${comment.agree} agree with this`
             
         if (comment.user_id === globalLoginedUserID) {
-            commentLi.textContent += "This is your comment (TEST)"
+            
+            deleteButton.classList.remove("hidden-button")
+            deleteButton.dataset.id = comment.id
+            deleteButton.innerText = "Delete"
+
+           
+            deleteButton.addEventListener("click", () => {
+                client.delete(`/comments/${deleteButton.dataset.id}`)
+                .then(commentObj => () => {
+                    fetchOneInstructor(viewedInstructorID)
+                })
+            })
+            // commentLi.textContent += "This is your comment (TEST)"
         }
         //console.log(comment.user_id)
 
-        commentLi.append(agreeButton)
+        commentLi.append(agreeButton, deleteButton)
         instructorComments.append(commentLi)
 
 
     })
 }
+
 
 function renderInstructorNavBar(instructorObj) {
     let instructorLi = document.createElement("li")
@@ -185,7 +201,6 @@ loginForm.addEventListener("submit", evt => {  //The Login function
     logoutButton = document.querySelector('#div-login-form2 > button')
 
     logoutButton.addEventListener("click", event =>{
-        evt.preventDefault()
         globalLoginedUserID = null;                     //resets global var and renders page again so it will not show 
         fetchOneInstructor(viewedInstructorID);         //which comments the user owened
     } )
