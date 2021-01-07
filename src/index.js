@@ -13,12 +13,15 @@ const loginForm = document.querySelector(`#login-form`)
 const divLoginForm = document.querySelector(`#div-login-form`)
 const divLoginForm2 = document.querySelector(`#div-login-form2`) //This is for the popup after logging in
 const instructorImg = document.querySelector("img")
+const bioHeader = document.querySelector("#bio-header")
 
 
 instructorList.innerHTML = ""
 
 let globalLoginedUserID = null; 
 let viewedInstructorID = 6 // change this when reseed.
+
+let clickedEasterEgg = 0; 
 
 
 //*************  FETCH FUNCTIONS *************//
@@ -42,6 +45,7 @@ let renderInstructor = (instructorObj) => {
     instructorImg.src = instructorObj.image
     instructorName.textContent = instructorObj.name
     instructorSchool.textContent = instructorObj.school
+    bioHeader.textContent = `Here's a little bit about ${instructorObj.name}...`
     instructorBio.textContent = instructorObj.bio
     instructorLikes.textContent = `${instructorObj.likes} Likes`
     instructorLikes.dataset.id = instructorObj.id
@@ -49,7 +53,9 @@ let renderInstructor = (instructorObj) => {
     targetID = instructorObj.id
     instructorComments.innerHTML = ''
     
-        
+
+    clickedEasterEgg = 0;
+
     instructorObj.comments.forEach((comment) => {
         let commentLi = document.createElement("li")
         commentLi.dataset.id = comment.id
@@ -57,15 +63,17 @@ let renderInstructor = (instructorObj) => {
 
         let agreeButton = document.createElement("button")
         agreeButton.dataset.id = comment.id
+        agreeButton.classList.add("comment-button")
         let deleteButton = document.createElement("button")
         deleteButton.classList.add("hidden-button")
 
-        commentLi.textContent = comment.content
+        commentLi.textContent = `${comment.content}   `
         agreeButton.textContent = `${comment.agree} agree with this`
             
         if (comment.user_id === globalLoginedUserID) {
             
             deleteButton.classList.remove("hidden-button")
+            deleteButton.classList.add("comment-button")
             deleteButton.dataset.id = comment.id
             deleteButton.innerText = "Delete"
 
@@ -77,6 +85,7 @@ let renderInstructor = (instructorObj) => {
             // commentLi.textContent += "This is your comment (TEST)"
         }
         //console.log(comment.user_id)
+
 
         commentLi.append(agreeButton, deleteButton)
         instructorComments.append(commentLi)
@@ -153,6 +162,8 @@ commentForm.addEventListener("submit", event => { //New Comment
     if (globalLoginedUserID !== null) {
      client.post('/comments', dataObj)
      .then(commentObj => fetchOneInstructor(targetID))
+    } else {
+        console.error("You must be logged in to leave a comment")
     }
     event.target.reset()
 })
@@ -196,7 +207,7 @@ loginForm.addEventListener("submit", evt => {  //The Login function
     .then(userArray => checkUser(userArray, loginUsername))
 
     
-    logoutButton = document.querySelector('#div-login-form2 > button')
+    logoutButton = document.querySelector('#div-login-form2 > div')
 
     logoutButton.addEventListener("click", event =>{
         globalLoginedUserID = null;                     //resets global var and renders page again so it will not show 
@@ -226,6 +237,38 @@ function checkUser (userArray, loginUsername) {
 
 }
 
+function addEasterEgg(){
+    // clickedEasterEgg = 0;
+
+    pageName = document.querySelector('body > main > h2')
+    //console.log(pageName.textContent)
+
+    // if (instructorObj.name === "Ian"){ //Easter eggs with Ian's Picture 
+    //     console.log("Easter Egg")
+         
+        instructorImg.addEventListener("click", () => {
+            clickedEasterEgg++;
+            //console.log(clickedEasterEgg)
+
+            if (10 < clickedEasterEgg && clickedEasterEgg <=20 && pageName.textContent === "Ian") {
+                instructorImg.src = 'https://i.kym-cdn.com/photos/images/original/000/092/462/c2f.jpg'
+            }
+            else if (clickedEasterEgg > 20 && pageName.textContent === "Ian"){
+                instructorImg.src = 'https://i.kym-cdn.com/photos/images/original/001/401/645/e0b.jpg'
+            }
+
+         })
+    // }
+
+
+}
+
 // INITIAL RENDER
 fetchOneInstructor(6)
 fetchAllInstructors()
+
+//EasterEggs and more 
+addEasterEgg();
+
+
+

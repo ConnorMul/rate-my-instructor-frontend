@@ -11,14 +11,16 @@
 
 <body>
   <header>
+    <!-- <div class="gradient-box-header">
+    <div class="gradient-box-header-module"> -->
     <h1>Rate My Instructor</h1>
     
-    <button class="open-button" onclick="openForm()">Login</button>
+    <button class="open-button" onclick="openForm()" >Login</button>
       <div class="form-popup" id="div-login-form">
 
       <form  class="form-container" id="login-form">
         <!-- action="/action_page.php" -->
-        <h4>Login</h4>
+        <h4 id="login">Login</h4>
     
         <label for="email"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" required>
@@ -27,12 +29,14 @@
         <input type="password" placeholder="Enter Password" name="psw" required> -->
     
         <button type="submit" class="btn">Login</button>
-        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        <button type="button" class="btn-cancel" onclick="closeForm()">Close</button>
       </form>
     </div>
     <div class="form-popup2" id="div-login-form2">
       <p id="username-container">Welcome USERNAMEHERE</p>
+      <div class="logout-button">
       <button onclick="closeForm2()">Log Out</button>
+      </div>
     </div>
     <br>
 
@@ -60,9 +64,24 @@
         document.querySelector("#div-instructor-form").style.display = "none"
       }
 
+      let openButton = document.getElementById(".open-button");
+
+      function showMore() {
+        openButton.style.display="none";
+        d3.style.display="block";
+      }
+
+      function showLess() {
+        openButton.style.display="inline-block";
+        openButton.style.display="none";
+      }
+
       </script>
+      <!-- </div>
+    </div> -->
   </header>
   <nav>
+    <h4 id="instructor-list-header">Select an Instructor to view their profile!</h4>
     <ul id="instructor-list">
       <li>Instructor 1</li>
       <li>Instructor 2</li>
@@ -70,22 +89,22 @@
 
     </ul>
    
-    <button class="new-instructor-button" onclick="openInstructorForm()">Add A New Instructor</button>
+    <button class="new-instructor-button" onclick="openInstructorForm()">Add A New Instructor  </button>
 
     <div class="instructor-form-popup" id="div-instructor-form"> 
       <form id="instructor-form" data-id="User ID HERE" autocomplete="off">
         <h4>Add a New Instructor</h4> 
-        <label for="name">New Instructor Name: </label><br>
-        <input type="text" name="name"  /><br>
+        <!-- <label for="name">New Instructor Name: </label><br> -->
+        <input type="text" name="name" placeholder="instructor name"/><br>
         <br>
-        <label for="years_teaching">New Instructor Years: </label><br>
-        <input type="text" name="years_teaching" /><br>
+        <!-- <label for="years_teaching">Instructors Years Teaching: </label><br> -->
+        <input type="text" name="years_teaching" placeholder="years of experience" /><br>
         <br>
-        <label for="bio">Bio: </label><br>
-        <input type="text" name="bio" /><br>
+        <!-- <label for="bio">Bio: </label><br> -->
+        <input type="text" name="bio" placeholder="bio" /><br>
         <br>
-        <label for="image">Image Link: </label><br>
-        <input type="text" name="image" /><br>
+        <!-- <label for="image">Image Link: </label><br> -->
+        <input type="text" name="image" placeholder="image link" /><br>
         <br>
         <input class="button" type="submit" value="Add Your Instructor" /><br>
         <br>
@@ -98,7 +117,9 @@
     
     <h2>Instructor Name</h2>
     <div class="info">
+      <h4 id="school-header">Teaches At:</h4>
       <h3>School</h3>
+      <h4 id="bio-header">Here's a little bit about </h4>
       <p id="bio">Bio</p>
       <button id="likes"></button>
       <ul id="comments">
@@ -109,14 +130,20 @@
     <form id="comment-form" data-id="insert Instructor ID HERE" autocomplete="off">
       <h4> Add a Comment for this Instructor </h4> 
       <label for="name"></label>
-      <input type="text" name="content" id=1 />
-      <input class="button" type="submit" value="Comment" />
+      <input type="text" name="content" id=1 placeholder="Comment"/>
+      <input class="button" type="submit" value="Comment"/>
     </form>
-    <hr />
+    
     
   </main>
-  <br>
-  <p>Made by Connor Mul</p>
+  
+  <div class="made-by">
+    <p>
+      Made by: <br>
+      Connor Mulholland <br>
+      Jason Jordan 
+    </p>
+  </div>
 </body>
 
 </html>
