@@ -19,7 +19,7 @@ const bioHeader = document.querySelector("#bio-header")
 instructorList.innerHTML = ""
 
 let globalLoginedUserID = null; 
-let viewedInstructorID = 6 // change this when reseed.
+let viewedInstructorID = 27 // change this when reseed.
 
 let clickedEasterEgg = 0; 
 
@@ -174,14 +174,14 @@ instructorForm.addEventListener("submit", evt => { //Addes a new Instructor
     let newInstructorName = evt.target.name.value
     let newInstructorYearsTeaching = evt.target.years_teaching.value
     let newInstructorBio = evt.target.bio.value
-    let newInstructorImage = evt.target.bio.image
+    let newInstructorImage = evt.target.img.value
 
 
     let dataObj = {
         name: newInstructorName,
         years_teaching: newInstructorYearsTeaching,
         bio: newInstructorBio,
-        school: "Flatiron",
+        school: "Flatiron School",
         likes: 1,
         image: newInstructorImage
     }
@@ -237,34 +237,60 @@ function checkUser (userArray, loginUsername) {
 
 }
 
-function addEasterEgg(){
-    // clickedEasterEgg = 0;
+function addEasterEgg(){ //I'm so sorry -Jason
 
     pageName = document.querySelector('body > main > h2')
     //console.log(pageName.textContent)
-
-    // if (instructorObj.name === "Ian"){ //Easter eggs with Ian's Picture 
-    //     console.log("Easter Egg")
          
-        instructorImg.addEventListener("click", () => {
-            clickedEasterEgg++;
-            //console.log(clickedEasterEgg)
+    instructorImg.addEventListener("click", () => {
+        clickedEasterEgg++;
+        //console.log(clickedEasterEgg)
+        let isIan = (pageName.textContent === "Ian")
 
-            if (10 < clickedEasterEgg && clickedEasterEgg <=20 && pageName.textContent === "Ian") {
-                instructorImg.src = 'https://i.kym-cdn.com/photos/images/original/000/092/462/c2f.jpg'
-            }
-            else if (clickedEasterEgg > 20 && pageName.textContent === "Ian"){
-                instructorImg.src = 'https://i.kym-cdn.com/photos/images/original/001/401/645/e0b.jpg'
-            }
-
-         })
-    // }
+        if (9 < clickedEasterEgg && clickedEasterEgg <=12 && isIan) {
+            instructorImg.src = './imgs/IanJoker.png'
+        }
+        else if (clickedEasterEgg === 13 && isIan){
+            instructorImg.src = './imgs/Ian1.png'
+        }
+        else if (clickedEasterEgg === 15 && isIan){
+            instructorImg.src = './imgs/Ian2.jpg'
+        }
+        else if (clickedEasterEgg === 17 && isIan){
+            instructorImg.src = './imgs/Ian3.jpg'
+        }
+        else if (clickedEasterEgg === 19 && isIan){
+            instructorImg.src = './imgs/Ian4.jpg'
+        }
+        else if (clickedEasterEgg === 21 && isIan){
+            instructorImg.src = './imgs/Ian5.jpg'
+        }
+        else if (clickedEasterEgg === 23 && isIan){
+            instructorImg.src = './imgs/Ian6.jpg'
+        }
+        else if (clickedEasterEgg === 25 && isIan){
+            instructorImg.src = './imgs/Ian7.jpg'
+        }
+        else if (clickedEasterEgg === 27 && isIan){
+            instructorImg.src = './imgs/Ian8.jpg'
+        }
+        else if (clickedEasterEgg === 29 && isIan){
+            instructorImg.src = './imgs/Ian9.jpg'
+        }
+        else if (clickedEasterEgg === 31 && isIan){
+            instructorImg.src = './imgs/Ian10.png'
+        }
+        else if(clickedEasterEgg === 32){
+            clickedEasterEgg = 10;
+        }
+    })
+    
 
 
 }
 
 // INITIAL RENDER
-fetchOneInstructor(6)
+fetchOneInstructor(27)
 fetchAllInstructors()
 
 //EasterEggs and more 
